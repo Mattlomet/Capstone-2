@@ -65,4 +65,18 @@ public class InventoryDaoTest {
 
     }
 
+    @Test
+    public void getInventoryByProductId(){
+        Inventory inventory = new Inventory();
+        inventory.setQuantity(10);
+        inventory.setProductId(1);
+
+        inventory = inventoryDao.saveInventory(inventory);
+
+
+
+        assertEquals(inventory, inventoryDao.getInventoryByProductId(inventory.getProductId()).get(0));
+
+    }
+
 }

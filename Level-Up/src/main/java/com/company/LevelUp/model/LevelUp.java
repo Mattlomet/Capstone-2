@@ -1,5 +1,7 @@
 package com.company.LevelUp.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -7,6 +9,7 @@ public class LevelUp {
     private int levelUpId;
     private int customerId;
     private int points;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate memberDate;
 
     public int getLevelUpId() {

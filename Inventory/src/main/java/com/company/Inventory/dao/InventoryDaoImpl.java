@@ -22,6 +22,9 @@ public class InventoryDaoImpl implements InventoryDao {
     private static final String SELECT_INVENTORY_SQL =
             "select * from inventory where inventory_id = ?";
 
+    private static final String SELECT_INVENTORY_BY_PRODUCT_ID_SQL =
+            "select * from inventory where product_id = ?";
+
     private static final String SELECT_ALL_INVENTORY_SQL =
             "select * from inventory";
 
@@ -58,6 +61,11 @@ public class InventoryDaoImpl implements InventoryDao {
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException("Please enter a valid inventory id");
         }
+    }
+
+    @Override
+    public List<Inventory> getInventoryByProductId(int id) {
+        return jdbcTemplate.query(SELECT_INVENTORY_BY_PRODUCT_ID_SQL, this::mapRowToInventory,id);
     }
 
     @Override

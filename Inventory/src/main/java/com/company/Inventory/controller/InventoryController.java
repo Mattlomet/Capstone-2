@@ -31,6 +31,12 @@ public class InventoryController {
     }
 
 
+    @GetMapping("/inventory/product/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Inventory> getInventoryByProductId(@PathVariable int id){
+        return serviceLayer.getInventoryByProductId(id);
+    }
+
     // POST METHODS
 
     @PostMapping("/inventory")

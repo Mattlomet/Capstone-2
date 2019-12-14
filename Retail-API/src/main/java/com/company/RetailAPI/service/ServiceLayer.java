@@ -4,13 +4,12 @@ import com.company.RetailAPI.model.*;
 import com.company.RetailAPI.util.feign.*;
 import com.company.RetailAPI.viewmodel.InvoiceViewModel;
 import com.company.RetailAPI.viewmodel.ProductViewModel;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +22,7 @@ public class ServiceLayer {
     private InvoiceFeign invoiceFeign;
     private LevelUpFeign levelUpFeign;
     private ProductFeign productFeign;
-
-
     private RabbitTemplate rabbitTemplate;
-
-    ObjectMapper mapper = new ObjectMapper();
-
-    private static final String EXCHANGE = "level-up-exchange";
-    private static final String ROUTING_KEY = "level-up.update.points";
-
 
     @Autowired
     public ServiceLayer(CustomerFeign customerFeign,InventoryFeign inventoryFeign,InvoiceFeign invoiceFeign,LevelUpFeign levelUpFeign,ProductFeign productFeign,RabbitTemplate rabbitTemplate){
@@ -43,71 +34,75 @@ public class ServiceLayer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-
+    private static final String EXCHANGE = "level-up-exchange";
+    private static final String ROUTING_KEY = "level-up.update.points";
 
     @Transactional
     public InvoiceViewModel submitInvoice(InvoiceViewModel invoiceViewModel){
 
-        //create invoice object
-        Invoice invoice = new Invoice();
+        //make sure customer is valid
+        Customer customer = customerFeign.getCustomerById(invoiceViewModel.getCustomerId());
 
-        try{
-            invoice.setCustomerId(customerFeign.getCustomerById(invoiceViewModel.getCustomerId()).getCustomerId());
-        }catch(Exception e){
-            throw new IllegalArgumentException("You have entered in a customer id that is invalid");
-        }
-        invoice.setPurchaseDate(invoiceViewModel.getPurchaseDate());
+        //      ------------------------------------- inventory
+        //check quantity for item being purchased
+        //get inventory by product id
+        //only one corresponding inventory to product so get the first item in array returned
 
-        //invoice save
-        invoiceFeign.createInvoice(invoice);
+        invoiceViewModel.getPurchaseProduct().stream()
+                .forEach(product -> {
+                    Inventory inventory = inventoryFeign.getInventoryByProductId(product.getProductId()).get(0);
 
-
-        //get product and check quantity (and make sure product exists)  based off each invoiceItem
-        invoiceViewModel.getInvoiceItemList().stream()
-                .forEach(invoiceItem -> {
-
-                    Inventory inventory = inventoryFeign.getInventoryById(invoiceItem.getInventoryId());
-
-                    if (inventory.getQuantity() < invoiceItem.getQuantity()){
+                    // need one product in stock to fulfill order
+                    if (inventory.getQuantity() < 1){
                         throw new IllegalArgumentException("Not enough inventory in stock!");
                     }
 
+                    //update inventory
+                    inventory.setQuantity((inventory.getQuantity()-1));
+                    inventoryFeign.updateInventory(inventory);
                 });
 
+        //      ------------------------------------- level up
+        //calc total & update level up points
+        int totalPrice = 0;
 
-
-
-        // set total price for view model & level up points
-        BigDecimal totalPrice = BigDecimal.ZERO;
-
-        for (InvoiceItem invoiceItem:
-        invoiceViewModel.getInvoiceItemList()) {
-            totalPrice.add(invoiceItem.getUnitPrice().multiply(new BigDecimal(invoiceItem.getQuantity())));
+        for (Product product:
+        invoiceViewModel.getPurchaseProduct()) {
+           totalPrice += product.getListPrice().intValue();
         }
 
-        //need to send to level up points to queue
-        int pointsMultiplier = (totalPrice.divide(new BigDecimal(50)).ROUND_DOWN);
+        int rewardsMultiplier = totalPrice/50;
+        int totalPoints = rewardsMultiplier*10;;
 
-        int totalPoints = pointsMultiplier*10;
+        // total price of product / 50 (rounded down) * 10 = total level up points for order
 
         //build levelUp for updating level points
         LevelUp levelUp = levelUpFeign.getLevelUpByCustomerId(invoiceViewModel.getCustomerId());
+
+        // if hystrix fires
+        if (levelUp.getLevelUpId() == 0){
+            throw new DataRetrievalFailureException("Unable to connect with level up service please try again");
+        }
+
         levelUp.setPoints(levelUp.getPoints()+totalPoints);
 
-        //TODO - send update queue!
-
+        //send to level up update queue
         rabbitTemplate.convertAndSend(EXCHANGE,ROUTING_KEY, levelUp);
 
+        //      ------------------------------------- save invoice
+        // we do this at end to ensure that all else went through without errors
+        Invoice invoice = new Invoice();
+        invoice.setCustomerId(customer.getCustomerId());
+        invoice.setPurchaseDate(LocalDate.now());
 
+        invoice = invoiceFeign.createInvoice(invoice);
 
-        //build InvoiceViewModel (already have customerId, invoiceItemList)
+        //      ------------------------------------- build Invoice View Model to present to customer
         invoiceViewModel.setInvoiceId(invoice.getInvoiceId());
         invoiceViewModel.setPurchaseDate(LocalDate.now());
         invoiceViewModel.setLevelUpPoints(totalPoints);
-        invoiceViewModel.setTotalPrice(totalPrice);
 
         return invoiceViewModel;
-
     }
 
     public InvoiceViewModel getInvoiceById(int id){
@@ -153,7 +148,7 @@ public class ServiceLayer {
 
 //    @Transactional
 //    public ProductViewModel getProductByInvoiceId(int id){
-//        Invoice invoice = invoiceFeign.getInvoiceById(id);
+//        Invoice invoice = productFeign.get(id);
 //
 //
 //    }
@@ -183,3 +178,68 @@ public class ServiceLayer {
     }
 }
 
+
+//
+//create invoice object
+//Invoice invoice = new Invoice();
+//
+//        try{
+//                invoice.setCustomerId(customerFeign.getCustomerById(invoiceViewModel.getCustomerId()).getCustomerId());
+//                }catch(Exception e){
+//                throw new IllegalArgumentException("You have entered in a customer id that is invalid");
+//                }
+//                invoice.setPurchaseDate(invoiceViewModel.getPurchaseDate());
+//
+//                //invoice save
+//                invoiceFeign.createInvoice(invoice);
+//
+//
+//                //get product and check quantity (and make sure product exists)  based off each invoiceItem
+//                invoiceViewModel.getInvoiceItemList().stream()
+//                .forEach(invoiceItem -> {
+//
+//                Inventory inventory = inventoryFeign.getInventoryById(invoiceItem.getInventoryId());
+//
+//                if (inventory.getQuantity() < invoiceItem.getQuantity()){
+//        throw new IllegalArgumentException("Not enough inventory in stock!");
+//        }
+//
+//        });
+//
+//
+//
+//
+//        // set total price for view model & level up points
+//        BigDecimal totalPrice = BigDecimal.ZERO;
+//
+//        for (InvoiceItem invoiceItem:
+//        invoiceViewModel.getInvoiceItemList()) {
+//        totalPrice.add(invoiceItem.getUnitPrice().multiply(new BigDecimal(invoiceItem.getQuantity())));
+//        }
+//
+//        //need to send to level up points to queue
+//        int pointsMultiplier = (totalPrice.divide(new BigDecimal(50)).ROUND_DOWN);
+//
+//        int totalPoints = pointsMultiplier*10;
+//
+//        //build levelUp for updating level points
+//        LevelUp levelUp = levelUpFeign.getLevelUpByCustomerId(invoiceViewModel.getCustomerId());
+//
+//        // if hystrix fires
+//        if (levelUp.getLevelUpId() == 0){
+//        invoiceViewModel.setLevelUpPointsError("Level Up Service currently down. Points will be saved.");
+//        }else{
+//        invoiceViewModel.setLevelUpPoints(totalPoints);
+//        levelUp.setPoints(levelUp.getPoints()+totalPoints);
+//        }
+//
+//        //send to level up update queue
+//        rabbitTemplate.convertAndSend(EXCHANGE,ROUTING_KEY, levelUp);
+//
+//
+//        //build InvoiceViewModel (already have customerId, invoiceItemList)
+//        invoiceViewModel.setInvoiceId(invoice.getInvoiceId());
+//        invoiceViewModel.setPurchaseDate(LocalDate.now());
+//        invoiceViewModel.setTotalPrice(totalPrice);
+//
+//        return invoiceViewModel;

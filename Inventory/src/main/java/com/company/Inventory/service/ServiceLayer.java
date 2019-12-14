@@ -22,6 +22,10 @@ public class ServiceLayer {
         return inventoryDao.getInventoryById(id);
     }
 
+    public List<Inventory> getInventoryByProductId(int id) {
+        return inventoryDao.getInventoryByProductId(id);
+    }
+
     public List<Inventory> getAllInventory() {
         return inventoryDao.getAllInventory();
     }

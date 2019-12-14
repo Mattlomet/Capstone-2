@@ -7,6 +7,7 @@ import java.util.List;
 public interface InventoryDao {
     Inventory saveInventory(Inventory inventory);
     Inventory getInventoryById(int id);
+    List<Inventory> getInventoryByProductId(int id);
     List<Inventory> getAllInventory();
     void updateInventory(Inventory inventory);
     void deleteInventory(int id);

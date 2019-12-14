@@ -59,6 +59,18 @@ public class ServiceLayerTest {
         assertEquals(inventoryList, serviceLayer.getAllInventory());
     }
 
+    @Test
+    @Transactional
+    public void getInventoryByProductId() {
+        Inventory inventory = new Inventory();
+        inventory.setQuantity(10);
+        inventory.setProductId(1);
+
+        inventory = serviceLayer.saveInventory(inventory);
+
+        assertEquals(inventory, serviceLayer.getInventoryByProductId(inventory.getProductId()).get(0));
+    }
+
 
     public void inventoryDaoMocks(){
         Inventory inventory = new Inventory();
@@ -75,6 +87,7 @@ public class ServiceLayerTest {
 
         doReturn(inventory1).when(inventoryDao).saveInventory(inventory);
         doReturn(inventory1).when(inventoryDao).getInventoryById(1);
+        doReturn(inventoryList).when(inventoryDao).getInventoryByProductId(inventory1.getProductId());
         doReturn(inventoryList).when(inventoryDao).getAllInventory();
     }
 }

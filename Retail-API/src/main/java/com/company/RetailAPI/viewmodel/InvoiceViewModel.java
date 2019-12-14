@@ -2,6 +2,7 @@ package com.company.RetailAPI.viewmodel;
 
 import com.company.RetailAPI.model.Invoice;
 import com.company.RetailAPI.model.InvoiceItem;
+import com.company.RetailAPI.model.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -19,14 +20,12 @@ public class InvoiceViewModel {
     private int invoiceId;
     @Min(value = 0, message = "you must supply a valid customer id")
     private int customerId;
-    @NotNull
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate purchaseDate;
+    private List<Product> purchaseProduct;
     private int levelUpPoints;
-    private List<InvoiceItem> invoiceItemList;
-    private BigDecimal totalPrice;
 
     public int getInvoiceId() {
         return invoiceId;
@@ -60,21 +59,15 @@ public class InvoiceViewModel {
         this.levelUpPoints = levelUpPoints;
     }
 
-    public List<InvoiceItem> getInvoiceItemList() {
-        return invoiceItemList;
+
+    public List<Product> getPurchaseProduct() {
+        return purchaseProduct;
     }
 
-    public void setInvoiceItemList(List<InvoiceItem> invoiceItemList) {
-        this.invoiceItemList = invoiceItemList;
+    public void setPurchaseProduct(List<Product> purchaseProduct) {
+        this.purchaseProduct = purchaseProduct;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -85,13 +78,12 @@ public class InvoiceViewModel {
                 getCustomerId() == that.getCustomerId() &&
                 getLevelUpPoints() == that.getLevelUpPoints() &&
                 Objects.equals(getPurchaseDate(), that.getPurchaseDate()) &&
-                Objects.equals(getInvoiceItemList(), that.getInvoiceItemList()) &&
-                Objects.equals(getTotalPrice(), that.getTotalPrice());
+                Objects.equals(getPurchaseProduct(), that.getPurchaseProduct());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getInvoiceId(), getCustomerId(), getPurchaseDate(), getLevelUpPoints(), getInvoiceItemList(), getTotalPrice());
+        return Objects.hash(getInvoiceId(), getCustomerId(), getPurchaseDate(), getPurchaseProduct(), getLevelUpPoints());
     }
 
     @Override
@@ -100,9 +92,8 @@ public class InvoiceViewModel {
                 "invoiceId=" + invoiceId +
                 ", customerId=" + customerId +
                 ", purchaseDate=" + purchaseDate +
-                ", levelUpPoints=" + levelUpPoints +
-                ", invoiceItemList=" + invoiceItemList +
-                ", totalPrice=" + totalPrice +
+                ", purchaseProduct=" + purchaseProduct +
+                ", levelUpPoints=" + levelUpPoints + '\'' +
                 '}';
     }
 }

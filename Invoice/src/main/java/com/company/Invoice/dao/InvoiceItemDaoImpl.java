@@ -77,9 +77,7 @@ public class InvoiceItemDaoImpl implements InvoiceItemDao {
     }
 
     @Override
-    public void deleteInvoiceItem(int id) {
-        jdbcTemplate.update(DELETE_InvoiceItem, id);
-    }
+    public void deleteInvoiceItem(int id) { jdbcTemplate.update(DELETE_InvoiceItem, id); }
 
     private InvoiceItem mapRowToInvoiceItem(ResultSet rs, int rowNum) throws SQLException {
         InvoiceItem invoiceItem = new InvoiceItem();

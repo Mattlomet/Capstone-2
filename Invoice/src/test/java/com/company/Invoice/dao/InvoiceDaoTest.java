@@ -67,4 +67,15 @@ public class InvoiceDaoTest {
         assertEquals(invoice,invoiceDao.getInvoiceById(invoice.getInvoiceId()));
     }
 
+    @Test
+    public void getInvoiceByCustomerId(){
+        Invoice invoice = new Invoice();
+        invoice.setPurchaseDate(LocalDate.of(10,10,10));
+        invoice.setCustomerId(1);
+
+        invoice = invoiceDao.saveInvoice(invoice);
+
+        assertEquals(invoice, invoiceDao.getInvoiceByCustomerId(invoice.getCustomerId()).get(0));
+    }
+
 }

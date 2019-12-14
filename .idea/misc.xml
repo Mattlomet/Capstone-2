@@ -5,6 +5,14 @@
       <list>
         <option value="$PROJECT_DIR$/Inventory/Inventory/pom.xml" />
         <option value="$PROJECT_DIR$/Invoice/pom.xml" />
+        <option value="$PROJECT_DIR$/Level-Up/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/eureka-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Retail-API/pom.xml" />
+        <option value="$PROJECT_DIR$/queue-consumer-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Customer/pom.xml" />
+        <option value="$PROJECT_DIR$/Product/pom.xml" />
+        <option value="$PROJECT_DIR$/Inventory/pom.xml" />
       </list>
     </option>
   </component>

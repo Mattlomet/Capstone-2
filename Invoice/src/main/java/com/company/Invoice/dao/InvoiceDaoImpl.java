@@ -22,6 +22,9 @@ public class InvoiceDaoImpl implements InvoiceDao {
     private static final String SELECT_INVOICE_SQL =
             "select * from invoice where invoice_id = ?";
 
+    private static final String SELECT_INVOICE_BY_CUSTOMER_SQL =
+            "select * from invoice where customer_id = ?";
+
     private static final String SELECT_ALL_INVOICE_SQL =
             "select * from invoice";
 
@@ -77,6 +80,11 @@ public class InvoiceDaoImpl implements InvoiceDao {
     @Override
     public void deleteInvoice(int id) {
         jdbcTemplate.update(DELETE_INVOICE, id);
+    }
+
+    @Override
+    public List<Invoice> getInvoiceByCustomerId(int customerId) {
+        return jdbcTemplate.query(SELECT_INVOICE_BY_CUSTOMER_SQL, this::mapRowToInvoice, customerId);
     }
 
     private Invoice mapRowToInvoice(ResultSet rs, int rowNum) throws SQLException {

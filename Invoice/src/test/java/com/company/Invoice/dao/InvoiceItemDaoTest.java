@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,16 +32,17 @@ public class InvoiceItemDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        invoiceDao.getAllInvoices().stream().forEach(invoice -> invoiceDao.deleteInvoice(invoice.getInvoiceId()));
+
         List<InvoiceItem> invoiceItemList = invoiceItemDao.getAllInvoiceItems();
         for (InvoiceItem invoiceItem:
                 invoiceItemList) {
-            invoiceItemDao.deleteInvoiceItem(invoiceItem.getInventoryId());
+            invoiceItemDao.deleteInvoiceItem(invoiceItem.getInvoiceItemId());
         }
+
+        invoiceDao.getAllInvoices().stream().forEach(invoice -> invoiceDao.deleteInvoice(invoice.getInvoiceId()));
     }
 
     @Test
-    @Transactional
     public void createGetGetAllDeleteInvoiceItem(){
         Invoice invoice = new Invoice();
         invoice.setPurchaseDate(LocalDate.of(10,10,10));
@@ -66,9 +68,9 @@ public class InvoiceItemDaoTest {
 
 
 
-        invoiceItemDao.deleteInvoiceItem(invoiceItem.getInventoryId());
+        invoiceItemDao.deleteInvoiceItem(invoiceItem.getInvoiceItemId());
 
-        assertEquals(0, invoiceItemDao.getAllInvoiceItems());
+        assertEquals(0,invoiceItemDao.getAllInvoiceItems().size());
     }
 
     @Test

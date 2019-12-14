@@ -30,6 +30,10 @@ public class ServiceLayer {
         return invoiceDao.getAllInvoices();
     }
 
+    public List<Invoice> getInvoicesByCustomerId(int id){
+        return invoiceDao.getInvoiceByCustomerId(id);
+    }
+
     public void updateInvoice(Invoice invoice) {
         invoiceDao.updateInvoice(invoice);
     }

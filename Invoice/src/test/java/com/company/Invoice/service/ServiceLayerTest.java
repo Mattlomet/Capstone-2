@@ -3,6 +3,7 @@ package com.company.Invoice.service;
 
 import com.company.Invoice.dao.InvoiceDao;
 import com.company.Invoice.dao.InvoiceItemDao;
+import com.company.Invoice.dao.InvoiceItemDaoImpl;
 import com.company.Invoice.model.Invoice;
 import com.company.Invoice.model.InvoiceItem;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -36,8 +38,8 @@ public class ServiceLayerTest {
 
     @Before
     public void setUp(){
-        setUpInvoiceMocks();
         setUpInvoiceItemsMocks();
+        setUpInvoiceMocks();
     }
 
     @Test
@@ -54,6 +56,17 @@ public class ServiceLayerTest {
     }
 
     @Test
+    public void getInvoiceByCustomerId(){
+        Invoice invoice = new Invoice();
+        invoice.setPurchaseDate(LocalDate.of(10,10,10));
+        invoice.setCustomerId(1);
+
+        invoice = serviceLayer.saveInvoice(invoice);
+
+        assertEquals(invoice, serviceLayer.getInvoicesByCustomerId(invoice.getInvoiceId()).get(0));
+    }
+
+    @Test
     public void saveGetGetAllInvoiceItem(){
         InvoiceItem invoiceItem = new InvoiceItem();
         invoiceItem.setInvoiceId(1);
@@ -61,7 +74,10 @@ public class ServiceLayerTest {
         invoiceItem.setUnitPrice(new BigDecimal("10.00"));
         invoiceItem.setQuantity(10);
 
+
         invoiceItem = serviceLayer.saveInvoiceItem(invoiceItem);
+        System.out.println(invoiceItem);
+
 
         assertEquals(invoiceItem, serviceLayer.getInvoiceItemById(invoiceItem.getInvoiceItemId()));
 
@@ -85,6 +101,7 @@ public class ServiceLayerTest {
         doReturn(invoice1).when(invoiceDao).saveInvoice(invoice);
         doReturn(invoice1).when(invoiceDao).getInvoiceById(invoice1.getInvoiceId());
         doReturn(invoiceList).when(invoiceDao).getAllInvoices();
+        doReturn(invoiceList).when(invoiceDao).getInvoiceByCustomerId(invoice1.getCustomerId());
 
     }
 

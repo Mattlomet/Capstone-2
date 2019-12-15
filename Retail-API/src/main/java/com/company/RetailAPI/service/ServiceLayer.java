@@ -95,7 +95,9 @@ public class ServiceLayer {
         invoice.setCustomerId(customer.getCustomerId());
         invoice.setPurchaseDate(LocalDate.now());
 
+        System.out.println(invoice);
         invoice = invoiceFeign.createInvoice(invoice);
+        System.out.println(invoice);
 
         //      ------------------------------------- build Invoice View Model to present to customer
         invoiceViewModel.setInvoiceId(invoice.getInvoiceId());
@@ -128,15 +130,12 @@ public class ServiceLayer {
         return invoiceViewModelList;
     }
 
-    @Transactional
     public List<ProductViewModel> getAllProducts(){
         List<ProductViewModel> productList = new ArrayList<>();
-
-        inventoryFeign.getAllInventory().stream()
-                .forEach(inventory -> {
-                    productList.add(buildProductViewModel(productFeign.getProductById(inventory.getProductId())));
+        productFeign.getAllProducts().stream()
+                .forEach(product -> {
+                    productList.add(buildProductViewModel(product));
                 });
-
         return productList;
     }
 
@@ -147,10 +146,13 @@ public class ServiceLayer {
     }
 
 //    @Transactional
-//    public ProductViewModel getProductByInvoiceId(int id){
-//        Invoice invoice = productFeign.get(id);
-//
-//
+//    public List<ProductViewModel> getProductByInvoiceId(int invoiceId){
+//        List<ProductViewModel> productViewModelList = new ArrayList<>();
+//        productFeign.getProductByInvoiceId(invoiceId).stream()
+//                .forEach(product -> {
+//                    productViewModelList.add(buildProductViewModel(product));
+//                });
+//        return productViewModelList;
 //    }
 
     public int getLevelUpPointsByCustomerId(int id){
@@ -179,67 +181,3 @@ public class ServiceLayer {
 }
 
 
-//
-//create invoice object
-//Invoice invoice = new Invoice();
-//
-//        try{
-//                invoice.setCustomerId(customerFeign.getCustomerById(invoiceViewModel.getCustomerId()).getCustomerId());
-//                }catch(Exception e){
-//                throw new IllegalArgumentException("You have entered in a customer id that is invalid");
-//                }
-//                invoice.setPurchaseDate(invoiceViewModel.getPurchaseDate());
-//
-//                //invoice save
-//                invoiceFeign.createInvoice(invoice);
-//
-//
-//                //get product and check quantity (and make sure product exists)  based off each invoiceItem
-//                invoiceViewModel.getInvoiceItemList().stream()
-//                .forEach(invoiceItem -> {
-//
-//                Inventory inventory = inventoryFeign.getInventoryById(invoiceItem.getInventoryId());
-//
-//                if (inventory.getQuantity() < invoiceItem.getQuantity()){
-//        throw new IllegalArgumentException("Not enough inventory in stock!");
-//        }
-//
-//        });
-//
-//
-//
-//
-//        // set total price for view model & level up points
-//        BigDecimal totalPrice = BigDecimal.ZERO;
-//
-//        for (InvoiceItem invoiceItem:
-//        invoiceViewModel.getInvoiceItemList()) {
-//        totalPrice.add(invoiceItem.getUnitPrice().multiply(new BigDecimal(invoiceItem.getQuantity())));
-//        }
-//
-//        //need to send to level up points to queue
-//        int pointsMultiplier = (totalPrice.divide(new BigDecimal(50)).ROUND_DOWN);
-//
-//        int totalPoints = pointsMultiplier*10;
-//
-//        //build levelUp for updating level points
-//        LevelUp levelUp = levelUpFeign.getLevelUpByCustomerId(invoiceViewModel.getCustomerId());
-//
-//        // if hystrix fires
-//        if (levelUp.getLevelUpId() == 0){
-//        invoiceViewModel.setLevelUpPointsError("Level Up Service currently down. Points will be saved.");
-//        }else{
-//        invoiceViewModel.setLevelUpPoints(totalPoints);
-//        levelUp.setPoints(levelUp.getPoints()+totalPoints);
-//        }
-//
-//        //send to level up update queue
-//        rabbitTemplate.convertAndSend(EXCHANGE,ROUTING_KEY, levelUp);
-//
-//
-//        //build InvoiceViewModel (already have customerId, invoiceItemList)
-//        invoiceViewModel.setInvoiceId(invoice.getInvoiceId());
-//        invoiceViewModel.setPurchaseDate(LocalDate.now());
-//        invoiceViewModel.setTotalPrice(totalPrice);
-//
-//        return invoiceViewModel;

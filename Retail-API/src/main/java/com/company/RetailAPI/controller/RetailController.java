@@ -48,9 +48,9 @@ public class RetailController {
         return serviceLayer.getProductById(id);
     }
 
-//    @RequestMapping(value = "/products/invoice/{id}", method = RequestMethod.GET)
-//    public List<ProductViewModel> getProductByInvoiceId(@PathVariable int id) {
-//        return serviceLayer.getProductByInvoiceId(id);
+//    @RequestMapping(value = "/products/invoice/{invoiceId}", method = RequestMethod.GET)
+//    public List<ProductViewModel> getProductByInvoiceId(@PathVariable int invoiceId) {
+//        return serviceLayer.getProductByInvoiceId(invoiceId);
 //    }
 
     @RequestMapping(value = "/levelup/customer/{id}", method = RequestMethod.GET)

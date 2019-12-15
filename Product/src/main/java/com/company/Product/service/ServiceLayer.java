@@ -22,6 +22,8 @@ public class ServiceLayer {
         return productDao.getProductById(id);
     }
 
+//    public List<Product> getProductByInvoiceId(int invoiceId){ return productDao.getProductByInvoiceId(invoiceId); }
+
     public List<Product> getAllProducts() {
         return productDao.getAllProducts();
     }

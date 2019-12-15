@@ -22,6 +22,9 @@ public class ProductDaoImpl implements ProductDao {
     private static final String SELECT_PRODUCT_SQL =
             "select * from product where product_id = ?";
 
+//    private static final String SELECT_PRODUCT_BY_INVOICE_ID_SQL =
+//            "select * from product where invoice_id = ?";
+
     private static final String SELECT_ALL_PRODUCTS_SQL =
             "select * from product";
 
@@ -59,6 +62,11 @@ public class ProductDaoImpl implements ProductDao {
             throw new IllegalArgumentException("Please enter a valid product id");
         }
     }
+
+//    @Override
+//    public List<Product> getProductByInvoiceId(int invoiceId) {
+//            return jdbcTemplate.query(SELECT_PRODUCT_BY_INVOICE_ID_SQL, this::mapRowToProduct, invoiceId);
+//    }
 
     @Override
     public List<Product> getAllProducts() {

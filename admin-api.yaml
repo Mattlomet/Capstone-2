@@ -1,0 +1,942 @@
+swagger: '2.0'
+info:
+  description: Admin API
+  version: '1.0'
+  title: Admin API
+  contact: {}
+host: 'localhost:8282'
+paths:
+  /customer:
+    get:
+      tags:
+        - customer-controller
+      summary: getAllCustomers
+      operationId: getAllCustomersUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Customer'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - customer-controller
+      summary: addCustomer
+      operationId: addCustomerUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: customer
+          description: customer
+          required: true
+          schema:
+            $ref: '#/definitions/Customer'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Customer'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/customer/{id}':
+    get:
+      tags:
+        - customer-controller
+      summary: getCustomer
+      operationId: getCustomerUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Customer'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+      tags:
+        - customer-controller
+      summary: updateCustomer
+      operationId: updateCustomerUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: customer
+          description: customer
+          required: true
+          schema:
+            $ref: '#/definitions/Customer'
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '201':
+          description: Created
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - customer-controller
+      summary: deleteCustomer
+      operationId: deleteCustomerUsingDELETE
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+  /error:
+    get:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    head:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingHEAD
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+    post:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingDELETE
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+    options:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingOPTIONS
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+    patch:
+      tags:
+        - basic-error-controller
+      summary: error
+      operationId: errorUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+  /inventory:
+    get:
+      tags:
+        - inventory-controller
+      summary: getAllInventories
+      operationId: getAllInventoriesUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Inventory'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - inventory-controller
+      summary: addInventory
+      operationId: addInventoryUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: inventory
+          description: inventory
+          required: true
+          schema:
+            $ref: '#/definitions/Inventory'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Inventory'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/inventory/{id}':
+    get:
+      tags:
+        - inventory-controller
+      summary: getInventory
+      operationId: getInventoryUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Inventory'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+      tags:
+        - inventory-controller
+      summary: updateInventory
+      operationId: updateInventoryUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: inventory
+          description: inventory
+          required: true
+          schema:
+            $ref: '#/definitions/Inventory'
+      responses:
+        '201':
+          description: Created
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - inventory-controller
+      summary: deleteInventory
+      operationId: deleteInventoryUsingDELETE
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+  /invoice:
+    get:
+      tags:
+        - invoice-controller
+      summary: getAllOrders
+      operationId: getAllOrdersUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OrderViewModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - invoice-controller
+      summary: createOrder
+      operationId: createOrderUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: ovm
+          description: ovm
+          required: true
+          schema:
+            $ref: '#/definitions/OrderViewModel'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/OrderViewModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/invoice/{id}':
+    get:
+      tags:
+        - invoice-controller
+      summary: getOrder
+      operationId: getOrderUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/OrderViewModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+      tags:
+        - invoice-controller
+      summary: updateOrder
+      operationId: updateOrderUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: ovm
+          description: ovm
+          required: true
+          schema:
+            $ref: '#/definitions/OrderViewModel'
+      responses:
+        '201':
+          description: Created
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - invoice-controller
+      summary: deleteOrder
+      operationId: deleteOrderUsingDELETE
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+  /levelup:
+    get:
+      tags:
+        - level-up-controller
+      summary: getAllLevelUps
+      operationId: getAllLevelUpsUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LevelUp'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - level-up-controller
+      summary: createLevelUp
+      operationId: createLevelUpUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: levelUp
+          description: levelUp
+          required: true
+          schema:
+            $ref: '#/definitions/LevelUp'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/LevelUp'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/levelup/{id}':
+    get:
+      tags:
+        - level-up-controller
+      summary: getLevelUp
+      operationId: getLevelUpUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/LevelUp'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+      tags:
+        - level-up-controller
+      summary: updateInvoiceItem
+      operationId: updateInvoiceItemUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: levelUp
+          description: levelUp
+          required: true
+          schema:
+            $ref: '#/definitions/LevelUp'
+      responses:
+        '201':
+          description: Created
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - level-up-controller
+      summary: deleteLevelUp
+      operationId: deleteLevelUpUsingDELETE
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+  /product:
+    get:
+      tags:
+        - product-controller
+      summary: getAllProducts
+      operationId: getAllProductsUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - product-controller
+      summary: addProduct
+      operationId: addProductUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: product
+          description: product
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Product'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/product/{id}':
+    get:
+      tags:
+        - product-controller
+      summary: getProduct
+      operationId: getProductUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Product'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+      tags:
+        - product-controller
+      summary: updateProduct
+      operationId: updateProductUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: product
+          description: product
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '201':
+          description: Created
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    delete:
+      tags:
+        - product-controller
+      summary: deleteProduct
+      operationId: deleteProductUsingDELETE
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+definitions:
+  Customer:
+    type: object
+    properties:
+      city:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+        format: int32
+      lastName:
+        type: string
+      phone:
+        type: string
+      street:
+        type: string
+      zip:
+        type: string
+    title: Customer
+  Inventory:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      productId:
+        type: integer
+        format: int32
+      quantity:
+        type: integer
+        format: int32
+    title: Inventory
+  InvoiceItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      inventoryId:
+        type: integer
+        format: int32
+      invoiceId:
+        type: integer
+        format: int32
+      quantity:
+        type: integer
+        format: int32
+      unitPrice:
+        type: number
+    title: InvoiceItem
+  LevelUp:
+    type: object
+    properties:
+      customerId:
+        type: integer
+        format: int32
+      id:
+        type: integer
+        format: int32
+      memberDate:
+        type: string
+        format: date
+      points:
+        type: integer
+        format: int32
+    title: LevelUp
+  OrderViewModel:
+    type: object
+    properties:
+      awardedPoints:
+        type: integer
+        format: int32
+      customer:
+        $ref: '#/definitions/Customer'
+      invoiceId:
+        type: integer
+        format: int32
+      invoiceItems:
+        type: array
+        items:
+          $ref: '#/definitions/InvoiceItem'
+      memberPoints:
+        $ref: '#/definitions/LevelUp'
+      orderTotal:
+        type: number
+      purchaseDate:
+        type: string
+        format: date
+    title: OrderViewModel
+  Product:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      listPrice:
+        type: number
+      productDescription:
+        type: string
+      productName:
+        type: string
+      unitCost:
+        type: number
+    title: Product

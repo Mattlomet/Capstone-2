@@ -1,0 +1,252 @@
+swagger: '2.0'
+info:
+  description: Api Documentation
+  version: '1.0'
+  title: Api Documentation
+  termsOfService: 'urn:tos'
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+host: 'localhost:8080'
+basePath: /
+tags:
+  - name: retail-controller
+    description: Retail Controller
+paths:
+  /invoices:
+    get:
+      tags:
+        - retail-controller
+      summary: getAllInvoices
+      operationId: getAllInvoicesUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InvoiceViewModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - retail-controller
+      summary: submitInvoice
+      operationId: submitInvoiceUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: invoiceViewModel
+          description: invoiceViewModel
+          required: true
+          schema:
+            $ref: '#/definitions/InvoiceViewModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/InvoiceViewModel'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/invoices/customer/{id}':
+    get:
+      tags:
+        - retail-controller
+      summary: getInvoicesByCustomerId
+      operationId: getInvoicesByCustomerIdUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InvoiceViewModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/invoices/{id}':
+    get:
+      tags:
+        - retail-controller
+      summary: getInvoiceById
+      operationId: getInvoiceByIdUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/InvoiceViewModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/levelup/customer/{id}':
+    get:
+      tags:
+        - retail-controller
+      summary: getLevelUpPointsByCustomerId
+      operationId: getLevelUpPointsByCustomerIdUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: false
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+            format: int32
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /products/inventory:
+    get:
+      tags:
+        - retail-controller
+      summary: getProductsInInventory
+      operationId: getProductsInInventoryUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProductViewModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/products/{id}':
+    get:
+      tags:
+        - retail-controller
+      summary: getProductById
+      operationId: getProductByIdUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ProductViewModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+definitions:
+  InvoiceViewModel:
+    type: object
+    properties:
+      customerId:
+        type: integer
+        format: int32
+      invoiceId:
+        type: integer
+        format: int32
+      levelUpPoints:
+        type: integer
+        format: int32
+      purchaseDate:
+        type: string
+        example: yyyy-MM-dd
+      purchaseProduct:
+        type: array
+        items:
+          $ref: '#/definitions/Product'
+    title: InvoiceViewModel
+  Product:
+    type: object
+    properties:
+      listPrice:
+        type: number
+      productDescription:
+        type: string
+      productId:
+        type: integer
+        format: int32
+      productName:
+        type: string
+      unitCost:
+        type: number
+    title: Product
+  ProductViewModel:
+    type: object
+    properties:
+      listPrice:
+        type: number
+      productDescription:
+        type: string
+      productId:
+        type: integer
+        format: int32
+      productName:
+        type: string
+      unitCost:
+        type: number
+    title: ProductViewModel

@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/Level-Up/Level-Up.iml" filepath="$PROJECT_DIR$/Level-Up/Level-Up.iml" />
       <module fileurl="file://$PROJECT_DIR$/Product/Product.iml" filepath="$PROJECT_DIR$/Product/Product.iml" />
       <module fileurl="file://$PROJECT_DIR$/Retail-API/Retail-API.iml" filepath="$PROJECT_DIR$/Retail-API/Retail-API.iml" />
+      <module fileurl="file://$PROJECT_DIR$/admin-api/admin-api.iml" filepath="$PROJECT_DIR$/admin-api/admin-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud-config-server/cloud-config-server.iml" filepath="$PROJECT_DIR$/cloud-config-server/cloud-config-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/eureka-service/eureka-service.iml" filepath="$PROJECT_DIR$/eureka-service/eureka-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/queue-consumer-service/queue-consumer-service.iml" filepath="$PROJECT_DIR$/queue-consumer-service/queue-consumer-service.iml" />
